@@ -23,26 +23,26 @@ export class FileStorageController {
   constructor(private fileStorageService: FileStorageService) {}
 
   @Get()
-  find(@Query() query) {
-    const { is_root, parent_id, name } = query;
+  find(@Query() params) {
+    const { is_root, parent_id, name, type } = params;
 
     if (is_root === "true") {
       return this.fileStorageService.findAll({ is_root: true });
     }
 
+    let query = {};
+
     if (parent_id) {
-      if (parent_id && name) {
-        return this.fileStorageService.findAll({
-          parent_id: parent_id,
-          name: name,
-        });
-      }
-      return this.fileStorageService.findAll({
-        parent_id: parent_id,
-      });
+      query = { ...query, parent_id: parent_id };
+    }
+    if (name) {
+      query = { ...query, name: name };
+    }
+    if (type) {
+      query = { ...query, type: type };
     }
 
-    return this.fileStorageService.findAll({});
+    return this.fileStorageService.findAll(query);
   }
 
   @Post()
