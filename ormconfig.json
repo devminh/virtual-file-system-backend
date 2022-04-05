@@ -1,0 +1,15 @@
+{
+  "type": "postgres",
+  "host": "satao.db.elephantsql.com",
+  "port": 5432,
+  "username": "wvifadkg",
+  "password": "wJEHhXOwufBK_RFtTgx2MbP9XlpxNDSM",
+  "database": "wvifadkg",
+  "entities": ["src/**/*.entity.ts"],
+  "synchronize": true,
+  "migrationsTableName": "migrations",
+  "migrations": ["src/database/migrations/*.ts"],
+  "cli": {
+    "migrationsDir": "src/database/migrations"
+  }
+}
