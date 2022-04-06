@@ -25,25 +25,7 @@ export class FileStorageController {
 
   @Get()
   find(@Query() params) {
-    const { is_root, parent_id, name, type } = params;
-
-    if (is_root === "true") {
-      return this.fileStorageService.findAll({ is_root: true });
-    }
-
-    let query = {};
-
-    if (parent_id) {
-      query = { ...query, parent_id: parent_id };
-    }
-    if (name) {
-      query = { ...query, name: name };
-    }
-    if (type) {
-      query = { ...query, type: type };
-    }
-
-    return this.fileStorageService.findAll(query);
+    return this.fileStorageService.findAll(params);
   }
 
   @Get("count-item/:id")

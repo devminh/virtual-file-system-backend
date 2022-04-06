@@ -10,8 +10,57 @@ export class FileStorageService {
     private fileStorageRepo: Repository<FileStorage>
   ) {}
 
-  findAll(query) {
-    return this.fileStorageRepo.find(query);
+  findAll(params) {
+    const { is_root, parent_id, name, type, sort_type } = params;
+
+    if (is_root === "true") {
+      return this.fileStorageRepo.find({ is_root: true });
+    }
+    let query = {};
+
+    let order;
+
+    switch (sort_type) {
+      case "NAME_ASC":
+        order = {
+          name: "ASC",
+        };
+        break;
+      case "NAME_DESC":
+        order = {
+          name: "DESC",
+        };
+        break;
+      case "CREATED_AT_ASC":
+        order = {
+          created_at: "ASC",
+        };
+        break;
+      case "CREATED_AT_DESC":
+        order = {
+          created_at: "DESC",
+        };
+        break;
+      default:
+        break;
+    }
+
+    if (parent_id) {
+      query = { ...query, parent_id: parent_id };
+    }
+    if (name) {
+      query = { ...query, name: name };
+    }
+    if (type) {
+      query = { ...query, type: type };
+    }
+
+    return this.fileStorageRepo.find({
+      where: query,
+      order: order || {
+        name: "ASC",
+      },
+    });
   }
 
   create(body: any) {
