@@ -11,6 +11,7 @@ import {
   Request,
   Query,
 } from "@nestjs/common";
+import { getManager } from "typeorm";
 
 import {
   FileStorageRequest,
@@ -45,6 +46,20 @@ export class FileStorageController {
     return this.fileStorageService.findAll(query);
   }
 
+  @Get("count-item/:id")
+  async countItem(@Param("id") id: number) {
+    const entityManager = getManager();
+    const result = await entityManager.query(
+      `
+    SELECT COUNT(*)
+    FROM file_storage
+    WHERE parent_id = $1
+      `,
+      [id]
+    );
+    return result[0];
+  }
+
   @Post()
   async create(@Body() body: FileStorageRequest) {
     return await this.fileStorageService
@@ -56,12 +71,10 @@ export class FileStorageController {
         };
       })
       .catch((err) => {
-        let errorMsg = err.message;
-
         throw new HttpException(
           {
             statusCode: HttpStatus.BAD_REQUEST,
-            message: errorMsg,
+            message: err.message,
           },
           HttpStatus.BAD_REQUEST
         );
@@ -79,12 +92,10 @@ export class FileStorageController {
         };
       })
       .catch((err) => {
-        let errorMsg = err.message;
-
         throw new HttpException(
           {
             statusCode: HttpStatus.BAD_REQUEST,
-            message: errorMsg,
+            message: err.message,
           },
           HttpStatus.BAD_REQUEST
         );
