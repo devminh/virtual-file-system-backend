@@ -46,10 +46,12 @@ export class FileStorageController {
   async create(@Body() body: FileStorageRequest) {
     return await this.fileStorageService
       .create(body)
-      .then(() => {
+      .then((res) => {
+        console.log("ress here", res);
         return {
           statusCode: 200,
           message: "Successfully create file/folder",
+          id: res.identifiers[0].id,
         };
       })
       .catch((err) => {
